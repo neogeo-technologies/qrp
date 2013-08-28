@@ -9,5 +9,3 @@ author=Neogeo Technologies
 email=w.rombouts@neogeo-online.net
 
 icon=qrp.png
-
-class_name=QRP
