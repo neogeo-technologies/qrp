@@ -3,7 +3,7 @@ name=QRP
 qgisMinimumVersion=2.0
 description=Use REST APIs to publish to or import from remote servers
 category=Web
-version=0.0.1
+version=0.1
 
 author=Neogeo Technologies
 email=w.rombouts@neogeo-online.net
