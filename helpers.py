@@ -43,9 +43,11 @@ def catch_httperrors(f):
             box = QMessageBox()
             box.setText("Something unexpected happened, the current operation might not have been completed as expected.")
             box.setDetailedText(traceback.format_exc())
-            box.setStandardButtons(QMessageBox.Ok)
+            box.setStandardButtons(QMessageBox.Ok|QMessageBox.Abort)
+            ret = box.exec_()
 
-            box.exec_()
+            if ret == QMessageBox.Abort:
+                raise
 
     return wrapper
 
