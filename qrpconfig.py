@@ -96,12 +96,14 @@ class QRPConfig(QDialog, ui_pick_target.Ui_Dialog):
                 return
             name = "New Remote"
 
-        print "saving name = %s" % name
-        if not self.remote:
-            self.remote = remote.Remote()
+        namechange = False
+        if self.remote and name != self.remote.name:
+            print "CHANGING REMOTE NAME."
+            namechange = True
+            self.remote = None
 
         # Make sure the name is not used.
-        if name != self.remote.name and name in self.remotes:
+        if namechange and name in self.remotes:
             i = 1
             while True:
                 newname = "%s_%d" % (name, i)
@@ -110,6 +112,12 @@ class QRPConfig(QDialog, ui_pick_target.Ui_Dialog):
                 i += 1
             self.nameLineEdit.setText(newname)
             name = newname
+
+        print "saving name = %s" % name
+        if not self.remote:
+            self.remote = remote.Remote()
+            self.remotes[name] = self.remote
+            self.targetList.addItem(name)
 
         self.remote.name = name
         self.remote.url = self.urlLineEdit.text()
@@ -121,12 +129,11 @@ class QRPConfig(QDialog, ui_pick_target.Ui_Dialog):
         flavour = self.tweakForComboBox.currentText()
         self.remote.flavour = None if flavour == "none" else flavour
 
-        if name not in self.remotes:
-            self.targetList.addItem(name)
-
-        assert self.remote.name == name
-        self.remotes[name] = self.remote
         self.remotes.save()
+
+
+        for x in self.remotes:
+            print x, self.remotes[x].name
 
     @log
     def loadRemote(self, name):
@@ -184,6 +191,7 @@ class QRPConfig(QDialog, ui_pick_target.Ui_Dialog):
     @log
     def changeRemote(self, curr, prev):
         print "[remotes]:", self.remotes
+
         if curr:
             self.saveRemote()
             self.loadRemote(curr.text())
